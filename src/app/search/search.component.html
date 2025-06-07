@@ -1,0 +1,150 @@
+<div class="wrapper" *ngIf="dataSource">
+  <h1><i class="fa-solid fa-film"></i> Cinema Search</h1>
+  
+  <div class="search-filters">
+    <h3><i class="fa-solid fa-filter"></i> Advanced Search Filters</h3>
+    
+    <div class="filter-field" [class.filter-active]="filters.title">
+      <mat-form-field appearance="outline">
+        <mat-label>Search by Title</mat-label>
+        <input matInput 
+               placeholder="Enter movie title..." 
+               [(ngModel)]="filters.title"
+               (input)="applyFilters()">
+        <mat-icon matSuffix>movie</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <div class="filter-field" [class.filter-active]="filters.runtime">
+      <mat-form-field appearance="outline">
+        <mat-label>Search by Runtime</mat-label>
+        <input matInput 
+               placeholder="e.g. 120, 90..." 
+               [(ngModel)]="filters.runtime"
+               (input)="applyFilters()">
+        <mat-icon matSuffix>schedule</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <div class="filter-field" [class.filter-active]="filters.date">
+      <mat-form-field appearance="outline">
+        <mat-label>Search by Date</mat-label>
+        <input matInput 
+               placeholder="e.g. 2025-01..." 
+               [(ngModel)]="filters.date"
+               (input)="applyFilters()">
+        <mat-icon matSuffix>calendar_today</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <div class="filter-field" [class.filter-active]="filters.summary">
+      <mat-form-field appearance="outline">
+        <mat-label>Search by Summary</mat-label>
+        <input matInput 
+               placeholder="Enter keywords..." 
+               [(ngModel)]="filters.summary"
+               (input)="applyFilters()">
+        <mat-icon matSuffix>description</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <div class="filter-field" [class.filter-active]="filters.createdAt">
+      <mat-form-field appearance="outline">
+        <mat-label>Search by Created at</mat-label>
+        <input matInput 
+               placeholder="e.g. 2025-03..." 
+               [(ngModel)]="filters.createdAt"
+               (input)="applyFilters()">
+        <mat-icon matSuffix>event</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <button class="clear-filters-btn" (click)="clearAllFilters()">
+      <i class="fa-solid fa-trash"></i>
+      Clear All Filters
+    </button>
+  </div>
+
+<div style="margin-bottom: 16px; text-align: center; color: #718096; font-weight: 500;">
+  <i class="fa-solid fa-list"></i> 
+  Showing {{dataSource.length}} of {{allData ? allData.length : 0}} movies
+</div>
+
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" *ngIf="dataSource.length > 0">
+   
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef>
+        <i class="fa-solid fa-clapperboard"></i> Title 
+      </th>
+      <td mat-cell *matCellDef="let element"> {{ element.title }} </td>
+    </ng-container>
+ 
+    <ng-container matColumnDef="runtime">
+      <th mat-header-cell *matHeaderCellDef>
+        <i class="fa-solid fa-clock"></i> Runtime 
+      </th>
+      <td mat-cell *matCellDef="let element"> {{ element.runTime }} min </td>
+    </ng-container>
+ 
+    <ng-container matColumnDef="startDate">
+      <th mat-header-cell *matHeaderCellDef>
+        <i class="fa-solid fa-calendar-days"></i> Date 
+      </th>
+      <td mat-cell *matCellDef="let element"> {{utils.formatDate(element.startDate)}} </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="shortDescription">
+      <th mat-header-cell *matHeaderCellDef>
+        <i class="fa-solid fa-align-left"></i> Summary 
+      </th>
+      <td mat-cell *matCellDef="let element"> 
+        <span [title]="element.shortDescription">
+          {{element.shortDescription.length > 50 ? element.shortDescription.substring(0, 50) + '...' : element.shortDescription}} 
+        </span>
+      </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="createdAt">
+      <th mat-header-cell *matHeaderCellDef>
+        <i class="fa-solid fa-plus-circle"></i> Created at 
+      </th>
+      <td mat-cell *matCellDef="let element"> {{utils.formatDate(element.createdAt)}} </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="pricePerTicket">
+      <th mat-header-cell *matHeaderCellDef>
+        <i class="fa-solid fa-tag"></i> Price 
+      </th>
+      <td mat-cell *matCellDef="let element"> 
+        <strong style="color: #667eea;">1000 RSD</strong>
+      </td>
+    </ng-container>
+    
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>
+        <i class="fa-solid fa-cogs"></i> Actions 
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-card-actions>
+          <a class="dugme" mat-button [routerLink]="['/projekcija']">
+            <i class="fa-solid fa-eye"></i> Details
+          </a>
+         
+          <button mat-button class="dugme" [routerLink]="['/projekcija/'+element.movieId+'/order']">
+            <i class="fa-solid fa-ticket"></i> Buy Ticket
+          </button>
+        </mat-card-actions>
+      </td>
+    </ng-container>
+ 
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+<div class="no-results" *ngIf="dataSource.length === 0 && allData && allData.length > 0">
+  <i class="fa-solid fa-search"></i>
+  <h3>No movies found</h3>
+  <p>Try adjusting your search filters or clear all filters to see all movies.</p>
+</div>
+
+<app-loading *ngIf="!dataSource"/>

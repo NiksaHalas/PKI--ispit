@@ -1,0 +1,32 @@
+.movie-title {
+    display: flex;
+    align-items: center;
+  }
+  
+  .movie-title span {
+    margin-right: 10px;  
+    margin-left: 10px;
+  }
+  
+  .movieposter {
+    width: 130px; 
+    height: auto; 
+  }
+
+  table th{
+    background-color: rgb(234, 106, 176);
+  }
+
+  .dugme1{
+    background-color: #da6fc4; 
+    border: none;
+    color: white;
+    margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 8px;
+    padding: 7px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+  }
